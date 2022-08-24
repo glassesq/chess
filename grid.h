@@ -14,8 +14,6 @@ class Grid : public QObject, public QGraphicsRectItem {
   void click();
   int x, y;
   int clicked = -1; // -1: unclicked, 0/1: chess
-
- public slots:
   void select(bool);
 
  protected:

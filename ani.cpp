@@ -24,5 +24,6 @@ void Ani::paintEvent(QPaintEvent*) {
   pos -= 10;
   if( pos < -10 ) pos = width() + 10;
 
-  painter.drawPixmap(pos - 100, 0, *pixmap,  m * size.width() / M, n * size.height() / N,  size.width() / M, size.height() / N);
+  painter.drawPixmap(pos - 100, 0, *pixmap,
+                     m * size.width() / M, n * size.height() / N,  size.width() / M, size.height() / N);
 }

@@ -41,7 +41,6 @@ class MainWindow : public QMainWindow {
 
  protected:
   bool eventFilter(QObject*, QEvent*) override;
-  void keyPressEvent(QKeyEvent*) override;
 
  private:
   int N = 7; // N * N board
@@ -87,6 +86,7 @@ class MainWindow : public QMainWindow {
   bool check(int, int); // last chess on (int, int), check if win
   bool isvalid(int, int); // check if (int, int) is a valid position
   void putChess(int, int, int); // put a chess on (int, int) by (turn) from file
+  void handleKey(QKeyEvent*); // handle key event
 
   QString getname(int);
 };

@@ -9,7 +9,7 @@ void MainWindow::init(void) {
   /* mouse */
   view  = new QGraphicsView(this);
   scene = new QGraphicsScene();
-  setMouseTracking(true);
+  view->installEventFilter(this);
 
   /* sound & music */
   sound = new QSoundEffect();
@@ -24,7 +24,6 @@ void MainWindow::init(void) {
   brush.setStyle(Qt::BrushStyle::SolidPattern);
   view->setScene(scene);
   view->setSceneRect(0, 0, LENGTH, LENGTH);
-  scene->installEventFilter(this);
 
   /* timer */
   timer = new QTimer(this);
@@ -67,7 +66,6 @@ void MainWindow::init(void) {
   layout->addWidget(readfile);
   layout->addWidget(writefile);
 
-
   QHBoxLayout *hlayout = new QHBoxLayout();
   hlayout->addWidget(message, Qt::AlignRight);
   hlayout->addWidget(checkbox, Qt::AlignLeft);
@@ -80,7 +78,6 @@ void MainWindow::init(void) {
 
   widget = new QWidget();
   widget->setLayout(layout);
-  widget->installEventFilter(this);
   widget->setFocusPolicy(Qt::NoFocus);
   setCentralWidget(widget);
 }
@@ -146,14 +143,14 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
   }
   if(event->type() == QEvent::KeyPress ) {
     if( gamestatus != 1 ) return true;
-    keyPressEvent(static_cast<QKeyEvent*>(event));
+    handleKey(static_cast<QKeyEvent*>(event));
     return true;
   }
-  view->setFocus();
+  if( focusWidget() != view ) view->setFocus();
   return QMainWindow::eventFilter(object, event);
 }
 
-void MainWindow::keyPressEvent(QKeyEvent* event) {
+void MainWindow::handleKey(QKeyEvent* event) {
 
   if( event->key() == Qt::Key_Left )
     move( (sx - 1 + N) % N, sy );
@@ -181,7 +178,8 @@ void MainWindow::startGame() {
   for(int i = 0; i < N ; i++)
     for(int j = 0; j < N; j++) {
       map[i][j] = new Grid(i, j);
-      map[i][j]->setRect( (1.0 * i * LENGTH / N), ( 1.0 * j * LENGTH / N), 1.0 * LENGTH / N - 1, 1.0 * LENGTH / N - 1);
+      map[i][j]->setRect( (1.0 * i * LENGTH / N), ( 1.0 * j * LENGTH / N),
+                          1.0 * LENGTH / N - 1, 1.0 * LENGTH / N - 1);
 
       connect(map[i][j], SIGNAL(gridClicked(int, int)), this, SLOT(drawChess(int, int)));
       scene->addItem(map[i][j]);
